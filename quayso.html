@@ -54,46 +54,205 @@
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
+        #recentWinners {
+    position: fixed;
+    bottom: 20px;  /* Đặt khung xuống phía dưới */
+    left: 50%;     /* Đưa về giữa trang */
+    transform: translateX(-50%); /* Căn giữa theo chiều ngang */
+    width: 400px;  /* Tăng chiều rộng nếu cần */
+    height: 200px; /* Điều chỉnh chiều cao phù hợp */
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    overflow: hidden;
+    font-size: 16px;
+    text-align: center;
+}
+#winnerList {
+    position: relative;
+    width: 100%;
+    height: 150px;  /* Đảm bảo đủ không gian cho 3 dòng */
+    overflow: hidden;
+    padding: 10px;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; /* Chia đều khoảng cách các dòng */
+}
+
+.winner-item {
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    white-space: nowrap;
+    position: absolute;
+    right: -100%; /* Bắt đầu từ ngoài màn hình bên phải */
+    top: calc(50px * var(--index));  /* Đặt khoảng cách dòng giữa các mục */
+    animation: scrollRightToLeft 15s linear infinite;
+}
+
+/* Tạo hiệu ứng di chuyển từ phải sang trái */
+@keyframes scrollRightToLeft {
+    0% {
+        right: -100%;
+    }
+    100% {
+        right: 100%;
+    }
+}
+
+
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="mb-4">Chúc Mừng Năm Mới!</h1>
-        <p class="mb-4">Hãy nhấn vào nút bên dưới để quay số nhận lì xì may mắn!</p>
+        <p class="mb-4" style="color: black;">Hãy nhấn vào nút bên dưới để quay số nhận lì xì may mắn!</p>
         <button id="spinBtn" class="btn btn-primary lucky-spin">🎁 Quay Số Ngay</button>
         <div id="result" class="mt-4">
-            <p>🎉 Chúc mừng! Bạn nhận được lì xì: <span id="luckyNumber" class="fw-bold text-danger"></span> VNĐ 🎉</p>
+            <p>🎉 Chúc mừng! Bạn sẽ nhận được: <span id="luckyNumber" class="fw-bold text-danger"></span> VNĐ tiền lì xì từ DanhLo 🎉</p>
             <button class="btn btn-success" onclick="submitLuckyNumber()">💰 Nhận Lì Xì</button>
         </div>
     </div>
 
+    <div id="recentWinners">
+        <h4>Người Nhận Lì Xì</h4>
+        <ul id="winnerList"></ul>
+    </div>
+    
+
     <script>
         document.getElementById('spinBtn').addEventListener('click', function() {
-            const luckyNumber = Math.floor(Math.random() * 100) + 1;
+            let spinBtn = document.getElementById('spinBtn');
+            if (spinBtn.disabled) return;
+
+            spinBtn.disabled = true;
+            spinBtn.classList.remove('lucky-spin');
+            spinBtn.innerText = "🎉 Đã Quay!";
+
+            let luckyNumber;
+            let random = Math.random();
+
+            if (random < 0.8) {
+                luckyNumber = Math.floor(Math.random() * 40) + 1;
+            } else if (random < 0.95) {
+                luckyNumber = Math.floor(Math.random() * 20) + 41;
+            } else {
+                luckyNumber = Math.floor(Math.random() * 40) + 61;
+            }
+
             document.getElementById('luckyNumber').innerText = luckyNumber * 1000;
             document.getElementById('result').style.display = "block";
         });
 
         function submitLuckyNumber() {
-            const scriptURL = "https://script.google.com/macros/s/AKfycby6YNViivr3lN5OAzboe9MgXiG0CRu7PrjNikq8fCHP4Lbw4yUYv6AofJVFKqRbrixl/exec";
-            const formData = new FormData();
-            formData.append('name', localStorage.getItem('name'));
-            formData.append('account', localStorage.getItem('account'));
-            formData.append('bank', localStorage.getItem('bank'));
-            formData.append('wish', localStorage.getItem('wish'));
-            formData.append('luckyNumber', document.getElementById('luckyNumber').innerText);
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxmuo6Q77ZRcxpeXiJR04ew-Kvj5YUhhjJWqPAvyEKfCruPMjLFX6LSGkcNZrnCaDOY/exec";
 
-            fetch(scriptURL, { method: 'POST', body: formData })
-                .then(response => response.text())
-                .then(result => {
-                    alert("Dữ liệu đã được gửi thành công!");
-                    localStorage.clear();
-                    window.location.href = "index.html";
-                })
-                .catch(error => {
-                    alert("Có lỗi xảy ra. Vui lòng thử lại!");
-                });
-        }
-    </script>
+    const name = localStorage.getItem('name'); // Lấy tên từ localStorage
+    const luckyNumber = document.getElementById('luckyNumber').innerText;
+
+    if (!name || !luckyNumber) {
+        alert("Không có dữ liệu hợp lệ. Vui lòng thử lại!");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('action', 'update');  // Hành động cập nhật
+    formData.append('name', name);  // Gửi tên để tìm đúng hàng
+    formData.append('amount', luckyNumber);  // Gửi số tiền lì xì
+
+    fetch(scriptURL, { method: 'POST', body: formData })
+        .then(response => response.text())
+        .then(result => {
+            if (result.trim() === "SUCCESS") {
+                alert("Lì xì đã được cập nhật vào Google Sheets!");
+                localStorage.clear();
+                window.location.href = "index.html";  // Quay lại trang chủ sau khi hoàn tất
+            } else if (result.trim() === "NOT FOUND") {
+                alert("Không tìm thấy thông tin người nhận. Vui lòng kiểm tra lại!");
+            } else {
+                alert("Có lỗi xảy ra. Vui lòng thử lại!");
+            }
+        })
+        .catch(error => {
+            alert("Lỗi kết nối. Vui lòng kiểm tra lại mạng!");
+        });
+}
+let displayedEntries = [];
+let recentEntries = [];
+
+function fetchWinners() {
+    const sheetURL = "https://script.google.com/macros/s/AKfycbxmuo6Q77ZRcxpeXiJR04ew-Kvj5YUhhjJWqPAvyEKfCruPMjLFX6LSGkcNZrnCaDOY/exec";
+
+    fetch(sheetURL)
+        .then(response => response.json())
+        .then(data => {
+            let winnerList = document.getElementById('winnerList');
+            winnerList.innerHTML = "";
+
+            // Lọc ra những dòng có đủ thông tin tên và số tiền
+            let validEntries = data.filter(entry => entry.name && entry.amount);
+
+            // Lấy 6 người nhận gần nhất
+            recentEntries = validEntries.slice(-6);
+
+            if (recentEntries.length === 0) {
+                winnerList.innerHTML = "<li class='winner-item'>Chưa có người nhận lì xì.</li>";
+                return;
+            }
+
+            displayedEntries = [];
+
+            // Hiển thị 3 dòng với khoảng cách đều nhau
+            for (let i = 0; i < 3; i++) {
+                addRunningWinner(i);
+            }
+        })
+        .catch(error => {
+            console.error("Không thể tải dữ liệu từ Sheets", error);
+        });
+}
+
+// Chọn ngẫu nhiên một mục từ danh sách mà chưa xuất hiện
+function getUniqueRandomEntry() {
+    let availableEntries = recentEntries.filter(entry => !displayedEntries.includes(entry.name));
+    if (availableEntries.length === 0) {
+        displayedEntries = [];
+        availableEntries = recentEntries;
+    }
+    let randomEntry = availableEntries[Math.floor(Math.random() * availableEntries.length)];
+    displayedEntries.push(randomEntry.name);
+    return randomEntry;
+}
+
+// Thêm một mục vào danh sách chạy liên tục
+function addRunningWinner(index) {
+    let entry = getUniqueRandomEntry();
+
+    let listItem = document.createElement('li');
+    listItem.classList.add("winner-item");
+    listItem.style.setProperty('--index', index);
+    listItem.innerText = `${entry.name} đã nhận ${entry.amount} VNĐ tiền lì xì từ DanhLo 🎉`;
+
+    document.getElementById('winnerList').appendChild(listItem);
+
+    // Thêm độ trễ giữa các dòng (để chúng không xuất hiện cùng lúc)
+    setTimeout(() => {
+        addRunningWinner(index);
+    }, index * 4000 + 5000); // Mỗi dòng chờ 4 giây trước khi chạy tiếp
+
+    // Xóa phần tử cũ khi kết thúc
+    listItem.addEventListener('animationend', () => {
+        listItem.remove();
+    });
+}
+
+// Gọi hàm fetchWinners ngay khi trang tải và cập nhật mỗi 60 giây
+setInterval(fetchWinners, 60000);
+fetchWinners();
+
+</script>
 </body>
 </html>
