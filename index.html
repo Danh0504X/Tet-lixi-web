@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng Năm Mới</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('anhbia.png') no-repeat center center fixed;
+            background-size: cover;
+            text-align: center;
+            padding: 50px;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.9); /* Làm trong suốt nhẹ để nhìn thấy ảnh nền */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+        .btn-success {
+            font-weight: bold;
+            font-size: 18px;
+            border-radius: 10px;
+        }
+        h1 {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 40px;
+            color: #d0021b; /* Màu đỏ tượng trưng cho Tết */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4 text-danger">Chúc Mừng Năm Mới!</h1>
+        <form id="infoForm">
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên của bạn</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="account" class="form-label">Số tài khoản</label>
+                <input type="text" class="form-control" id="account" name="account" required>
+            </div>
+            <div class="mb-3">
+                <label for="bank" class="form-label">Ngân hàng</label>
+                <input type="text" class="form-control" id="bank" name="bank" required>
+            </div>
+            <div class="mb-3">
+                <label for="wish" class="form-label">Lời chúc</label>
+                <input type="text" class="form-control" id="wish" name="wish" required>
+            </div>
+            <button type="submit" class="btn btn-success">Gửi thông tin</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('infoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Lưu thông tin vào localStorage để chuyển sang trang quay số
+            localStorage.setItem('name', document.getElementById('name').value);
+            localStorage.setItem('account', document.getElementById('account').value);
+            localStorage.setItem('bank', document.getElementById('bank').value);
+            localStorage.setItem('wish', document.getElementById('wish').value);
+            
+            // Chuyển hướng đến trang quay số
+            window.location.href = "quayso.html";
+        });
+    </script>
+</body>
+</html>
