@@ -38,7 +38,7 @@
         <h1 class="mb-4 text-danger">Chúc Mừng Năm Mới!</h1>
         <form id="infoForm">
             <div class="mb-3">
-                <label for="name" class="form-label">Tên của bạn</label>
+                <label for="name" class="form-label">Nhập Tên Của Bạn</label>
                 <input type="text" class="form-control" id="name" name="name" required>
             </div>
             <div class="mb-3">
@@ -46,30 +46,60 @@
                 <input type="text" class="form-control" id="account" name="account" required>
             </div>
             <div class="mb-3">
-                <label for="bank" class="form-label">Ngân hàng</label>
+                <label for="bank" class="form-label">Tên Ngân hàng</label>
                 <input type="text" class="form-control" id="bank" name="bank" required>
             </div>
             <div class="mb-3">
-                <label for="wish" class="form-label">Lời chúc</label>
+                <label for="wish" class="form-label">Đôi Lời Gửi Đến Thành Danh</label>
                 <input type="text" class="form-control" id="wish" name="wish" required>
             </div>
-            <button type="submit" class="btn btn-success">Gửi thông tin</button>
+            <button type="submit" class="btn btn-success">Xác Nhận</button>
         </form>
     </div>
 
-    <script>
-        document.getElementById('infoForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Lưu thông tin vào localStorage để chuyển sang trang quay số
-            localStorage.setItem('name', document.getElementById('name').value);
-            localStorage.setItem('account', document.getElementById('account').value);
-            localStorage.setItem('bank', document.getElementById('bank').value);
-            localStorage.setItem('wish', document.getElementById('wish').value);
-            
-            // Chuyển hướng đến trang quay số
-            window.location.href = "quayso.html";
+
+        <script>
+            document.getElementById('infoForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    // Lấy thông tin từ form
+    const name = document.getElementById('name').value;
+    const account = document.getElementById('account').value;
+    const bank = document.getElementById('bank').value;
+    const wish = document.getElementById('wish').value;
+    const time = new Date().toLocaleString(); // Lấy thời gian hiện tại
+
+    // Lưu thông tin vào localStorage để sử dụng trên trang quay số
+    localStorage.setItem('name', name);
+    localStorage.setItem('account', account);
+    localStorage.setItem('bank', bank);
+    localStorage.setItem('wish', wish);
+    localStorage.setItem('time', time);
+
+    // Gửi dữ liệu lên Google Sheets
+    const scriptURL = "https://script.google.com/macros/s/AKfycbypC3XLsWoR9sEM7bzqYgDTpEmqMbU6QuGOow_MU8Yu8uKDc6kD_NrSRphNg_PQFBlm/exec";
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('account', account);
+    formData.append('bank', bank);
+    formData.append('wish', wish);
+    formData.append('time', time);
+
+    fetch(scriptURL, { method: 'POST', body: formData })
+        .then(response => response.text())
+        .then(result => {
+            if (result === "SUCCESS") {
+                alert("Dữ liệu đã được ghi vào Google Sheets thành công!");
+                window.location.href = "quayso.html"; // Chuyển hướng sang trang quay số
+            } else {
+                alert("Có lỗi xảy ra, vui lòng thử lại!");
+            }
+        })
+        .catch(error => {
+            alert("Lỗi: " + error.message);
         });
-    </script>
+});
+
+     </script>
 </body>
 </html>
