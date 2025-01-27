@@ -6,122 +6,166 @@
     <title>Quay Số Lì Xì</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background: url('anhbia.png') no-repeat center center fixed;
-            background-size: cover;
-            text-align: center;
-            padding: 50px;
-            font-family: 'Arial', sans-serif;
-            color: #fff;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
-            border: 5px solid #d0021b;
-        }
-        h1 {
-            font-family: 'Brush Script MT', cursive;
-            font-size: 50px;
-            color: #d0021b;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .btn-primary, .btn-success {
-            font-weight: bold;
-            font-size: 20px;
-            border-radius: 15px;
-            padding: 15px 30px;
-        }
-        #result {
-            font-size: 24px;
-            font-weight: bold;
-            color: #28a745;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            border: 3px solid #28a745;
-            margin-top: 20px;
-            display: none;
-        }
-        .lucky-spin {
-            animation: spin 1s ease-in-out infinite;
-        }
-        @keyframes spin {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        #recentWinners {
-    position: fixed;
-    bottom: 20px;  /* Đặt khung xuống phía dưới */
-    left: 50%;     /* Đưa về giữa trang */
-    transform: translateX(-50%); /* Căn giữa theo chiều ngang */
-    width: 400px;  /* Tăng chiều rộng nếu cần */
-    height: 200px; /* Điều chỉnh chiều cao phù hợp */
-    background: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    overflow: hidden;
-    font-size: 16px;
+       body {
+    background: url('anhbia.png') no-repeat center center fixed;
+    background-size: cover;
     text-align: center;
+    padding: 50px;
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
 }
-#winnerList {
-    position: relative;
-    width: 100%;
-    height: 150px;  /* Đảm bảo đủ không gian cho 3 dòng */
-    overflow: hidden;
-    padding: 10px;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around; /* Chia đều khoảng cách các dòng */
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.9); /* Giữ nền mờ */
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.3);
+    border: 6px solid #d0021b;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: 50px;
+    color: #d0021b;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.btn-primary, .btn-success {
+    font-weight: bold;
+    font-size: 22px;
+    border-radius: 15px;
+    padding: 15px 30px;
+    background: linear-gradient(90deg, #ff4b2b, #ff416c);
+    color: #fff;
+    border: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.btn-primary:hover, .btn-success:hover {
+    transform: scale(1.1);
+    background: linear-gradient(90deg, #ff416c, #ff4b2b);
+}
+
+#result {
+    font-size: 26px;
+    font-weight: bold;
+    color: #28a745;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    border: 4px solid #28a745;
+    margin-top: 20px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    display: none;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.lucky-spin {
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Hiển thị danh sách người nhận thưởng với hiệu ứng sống động */
+#recentWinners {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    pointer-events: none;
+    z-index: 1000;
 }
 
 .winner-item {
-    font-size: 20px;
-    font-weight: bold;
-    color: #fff;
-    white-space: nowrap;
     position: absolute;
-    right: -100%; /* Bắt đầu từ ngoài màn hình bên phải */
-    top: calc(50px * var(--index));  /* Đặt khoảng cách dòng giữa các mục */
-    animation: scrollRightToLeft 15s linear infinite;
+    font-size: 24px;
+    font-weight: bold;
+    color: #000; /* Chữ đen dễ đọc */
+    white-space: nowrap;
+    opacity: 0;
+    animation: fadeMove 12s linear forwards;
+    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.9);
 }
 
-/* Tạo hiệu ứng di chuyển từ phải sang trái */
-@keyframes scrollRightToLeft {
+@keyframes fadeMove {
     0% {
-        right: -100%;
+        left: 100%;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
     }
     100% {
-        right: 100%;
+        left: -100%;
+        opacity: 0;
     }
 }
 
+/* Hiệu ứng pháo hoa */
+.fireworks {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.fireworks span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: #ff0;
+    border-radius: 50%;
+    animation: explode 1.5s ease-out infinite;
+}
+
+@keyframes explode {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(10); opacity: 0; }
+}
 
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="mb-4">Chúc Mừng Năm Mới!</h1>
-        <p class="mb-4" style="color: black;">Hãy nhấn vào nút bên dưới để quay số nhận lì xì may mắn!</p>
+        <p class="mb-4" style="color: black;">Nhấn vào nút dưới đây để nhận lấy con số may mắn của bạn!</p>
         <button id="spinBtn" class="btn btn-primary lucky-spin">🎁 Quay Số Ngay</button>
         <div id="result" class="mt-4">
             <p>🎉 Chúc mừng! Bạn sẽ nhận được: <span id="luckyNumber" class="fw-bold text-danger"></span> VNĐ tiền lì xì từ DanhLo 🎉</p>
             <button class="btn btn-success" onclick="submitLuckyNumber()">💰 Nhận Lì Xì</button>
         </div>
     </div>
-
-    <div id="recentWinners">
-        <h4>Người Nhận Lì Xì</h4>
-        <ul id="winnerList"></ul>
-    </div>
-    
+    <div id="recentWinners"></div>
+    <audio id="bg-music" loop>
+        <source src="./nhactet.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
         document.getElementById('spinBtn').addEventListener('click', function() {
@@ -167,7 +211,7 @@
         .then(response => response.text())
         .then(result => {
             if (result.trim() === "SUCCESS") {
-                alert("Lì xì đã được cập nhật vào Google Sheets!");
+                alert("Lì xì của bạn đã được cập nhật!");
                 localStorage.clear();
                 window.location.href = "index.html";  // Quay lại trang chủ sau khi hoàn tất
             } else if (result.trim() === "NOT FOUND") {
@@ -180,78 +224,120 @@
             alert("Lỗi kết nối. Vui lòng kiểm tra lại mạng!");
         });
 }
-let displayedEntries = [];
-let recentEntries = [];
 
 function fetchWinners() {
-    const sheetURL = "https://script.google.com/macros/s/AKfycbxmuo6Q77ZRcxpeXiJR04ew-Kvj5YUhhjJWqPAvyEKfCruPMjLFX6LSGkcNZrnCaDOY/exec";
+        const sheetURL = "https://script.google.com/macros/s/AKfycbxmuo6Q77ZRcxpeXiJR04ew-Kvj5YUhhjJWqPAvyEKfCruPMjLFX6LSGkcNZrnCaDOY/exec";
 
-    fetch(sheetURL)
-        .then(response => response.json())
-        .then(data => {
-            let winnerList = document.getElementById('winnerList');
-            winnerList.innerHTML = "";
+        fetch(sheetURL)
+            .then(response => response.json())
+            .then(data => {
+                let winnerContainer = document.getElementById('recentWinners');
+                winnerContainer.innerHTML = ""; // Xóa nội dung cũ
 
-            // Lọc ra những dòng có đủ thông tin tên và số tiền
-            let validEntries = data.filter(entry => entry.name && entry.amount);
+                let validEntries = data.filter(entry => entry.name && entry.amount);
+                let recentEntries = validEntries.slice(-10); // Lấy 10 người gần nhất
 
-            // Lấy 6 người nhận gần nhất
-            recentEntries = validEntries.slice(-6);
+                if (recentEntries.length === 0) {
+                    return;
+                }
 
-            if (recentEntries.length === 0) {
-                winnerList.innerHTML = "<li class='winner-item'>Chưa có người nhận lì xì.</li>";
-                return;
-            }
-
-            displayedEntries = [];
-
-            // Hiển thị 3 dòng với khoảng cách đều nhau
-            for (let i = 0; i < 3; i++) {
-                addRunningWinner(i);
-            }
-        })
-        .catch(error => {
-            console.error("Không thể tải dữ liệu từ Sheets", error);
-        });
-}
-
-// Chọn ngẫu nhiên một mục từ danh sách mà chưa xuất hiện
-function getUniqueRandomEntry() {
-    let availableEntries = recentEntries.filter(entry => !displayedEntries.includes(entry.name));
-    if (availableEntries.length === 0) {
-        displayedEntries = [];
-        availableEntries = recentEntries;
+                recentEntries.forEach((entry, index) => {
+                    setTimeout(() => {
+                        addFloatingWinner(entry.name, entry.amount);
+                    }, index * 4000); // Hiển thị cách nhau 4 giây
+                });
+            })
+            .catch(error => {
+                console.error("Không thể tải dữ liệu từ Sheets", error);
+            });
     }
-    let randomEntry = availableEntries[Math.floor(Math.random() * availableEntries.length)];
-    displayedEntries.push(randomEntry.name);
-    return randomEntry;
-}
+   
+    function addFloatingWinner(name, amount) {
+        let winnerContainer = document.getElementById('recentWinners');
+        let listItem = document.createElement('div');
+        listItem.classList.add("winner-item");
+        listItem.innerText = `${name} đã nhận ${amount} VNĐ tiền lì xì từ DanhLo 🎉`;
 
-// Thêm một mục vào danh sách chạy liên tục
-function addRunningWinner(index) {
-    let entry = getUniqueRandomEntry();
+        // Giới hạn vị trí xuất hiện trong phạm vi bảng chúc mừng
+        let randomTop = Math.random() * 20 + 20;  // Xuất hiện ngẫu nhiên từ 20% đến 40% chiều cao màn hình
+        listItem.style.top = `${randomTop}vh`;
 
-    let listItem = document.createElement('li');
-    listItem.classList.add("winner-item");
-    listItem.style.setProperty('--index', index);
-    listItem.innerText = `${entry.name} đã nhận ${entry.amount} VNĐ tiền lì xì từ DanhLo 🎉`;
+        winnerContainer.appendChild(listItem);
 
-    document.getElementById('winnerList').appendChild(listItem);
+        setTimeout(() => {
+            listItem.remove();
+        }, 10000);  // Xóa phần tử sau khi hoàn thành hiệu ứng
+    }
 
-    // Thêm độ trễ giữa các dòng (để chúng không xuất hiện cùng lúc)
-    setTimeout(() => {
-        addRunningWinner(index);
-    }, index * 4000 + 5000); // Mỗi dòng chờ 4 giây trước khi chạy tiếp
-
-    // Xóa phần tử cũ khi kết thúc
-    listItem.addEventListener('animationend', () => {
-        listItem.remove();
+    setInterval(fetchWinners, 60000);
+    fetchWinners();
+   // Chờ sự kiện click để gửi tín hiệu phát nhạc đến iframe
+   document.addEventListener('click', function() {
+        let musicFrame = document.getElementById('music-frame');
+        if (musicFrame && musicFrame.contentWindow) {
+            musicFrame.contentWindow.postMessage('play', '*');
+            console.log("Gửi tín hiệu phát nhạc");
+        }
     });
-}
 
-// Gọi hàm fetchWinners ngay khi trang tải và cập nhật mỗi 60 giây
-setInterval(fetchWinners, 60000);
-fetchWinners();
+    // Thêm sự kiện dừng nhạc
+    document.addEventListener("DOMContentLoaded", function() {
+    let audio = document.getElementById('bg-music');
+
+    // Khôi phục thời gian phát nếu có lưu trước đó
+    if (localStorage.getItem('audioTime')) {
+        audio.currentTime = parseFloat(localStorage.getItem('audioTime')) || 0;
+    }
+
+    // Kiểm tra xem nhạc đã từng phát hay chưa
+    if (localStorage.getItem('isPlaying') === 'true') {
+        audio.play().then(() => {
+            console.log("Nhạc đã tự động phát lại từ vị trí trước đó.");
+        }).catch(() => {
+            console.log("Autoplay bị chặn, chờ thao tác từ người dùng.");
+
+            // Chờ người dùng click vào bất kỳ đâu trên trang để phát nhạc
+            document.addEventListener('click', function playAudioOnce() {
+                audio.play();
+                console.log("Nhạc bắt đầu phát sau khi người dùng tương tác.");
+                document.removeEventListener('click', playAudioOnce);
+            });
+        });
+    } else {
+        // Nếu nhạc chưa từng phát, thử phát lần đầu
+        audio.play().then(() => {
+            console.log("Nhạc đã tự động phát lần đầu.");
+            localStorage.setItem('isPlaying', 'true');
+        }).catch(() => {
+            console.log("Autoplay bị chặn, chờ thao tác từ người dùng.");
+            document.addEventListener('click', function playAudioOnce() {
+                audio.play();
+                localStorage.setItem('isPlaying', 'true');
+                console.log("Nhạc bắt đầu phát sau khi người dùng tương tác.");
+                document.removeEventListener('click', playAudioOnce);
+            });
+        });
+    }
+
+    // Lưu lại thời gian phát mỗi giây để tiếp tục từ vị trí hiện tại
+    setInterval(() => {
+        if (!audio.paused) {
+            localStorage.setItem('audioTime', audio.currentTime);
+        }
+    }, 1000);
+});
+
+// Xóa trạng thái khi nhạc dừng để kiểm soát lại khi tải trang
+document.getElementById('bg-music').onpause = function() {
+    localStorage.removeItem('isPlaying');
+    localStorage.removeItem('audioTime');
+};
+
+// Đảm bảo trạng thái nhạc vẫn tiếp tục khi người dùng rời khỏi trang và quay lại
+window.addEventListener('beforeunload', () => {
+    localStorage.setItem('isPlaying', 'true');
+});
+
 
 </script>
 </body>
