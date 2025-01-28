@@ -5,77 +5,174 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chúc Mừng Năm Mới</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-       body {
-    background: url('anhbia.png') no-repeat center center fixed;
-    background-size: cover;
-    text-align: center;
-    padding: 50px;
-    font-family: 'Arial', sans-serif;
-}
+    
+        <style>
+    @import url('https://fonts.googleapis.com/css2?family=UVN+Cat+Bien&display=swap'); /* Font chữ Tết */
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap'); /* Font nghệ thuật khác */
 
-.container {
-    max-width: 500px;
-    margin: auto;
-    background: rgba(255, 255, 255, 0.9); /* Giữ nguyên nền trắng mờ */
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.2);
-}
+    body {
+        background: url('anhbia.png') no-repeat center center fixed;
+        background-size: cover;
+        text-align: center;
+        padding: 50px;
+        font-family: 'Arial', sans-serif;
+        color: #333;
+        overflow: hidden; /* Ngăn cuộn khi hiển thị lời chúc */
+    }
 
-h1 {
-    font-family: 'Pacifico', cursive; /* Font chữ mềm mại cho tiêu đề */
-    font-size: 45px;
-    color: #d0021b;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-}
+    .intro-messages {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
 
-.form-label {
-    font-family: 'Poppins', sans-serif;
-    font-size: 18px;
-    font-weight: 600;
-    color: #8b0000; /* Đỏ đậm tạo điểm nhấn */
-    margin-bottom: 8px;
-}
+    .intro-messages .message {
+        font-family: 'UVN Cat Bien', sans-serif; /* Font chữ mang phong cách ngày Tết */
+        font-size: 30px; /* Giảm thêm kích thước chữ */
+        font-weight: bold;
+        color: #f8c20f; /* Màu vàng chủ đạo */
+        text-shadow: 2px 2px 8px rgba(255, 0, 0, 0.8); /* Tạo hiệu ứng bóng đỏ đậm */
+        opacity: 0; /* Mờ mặc định */
+        visibility: hidden; /* Ẩn mặc định */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 
-input, select {
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
-    border: 2px solid #ff4500;
-    border-radius: 10px;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.8);
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
-    transition: all 0.3s ease-in-out;
-}
+    /* Hiệu ứng mờ và phóng to cho các câu chúc */
+    @keyframes fadeAndZoom {
+        0% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.8); /* Nhỏ hơn khi bắt đầu */
+        }
+        25% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1); /* Phóng to nhẹ */
+        }
+        75% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1); /* Giữ kích thước bình thường */
+        }
+        100% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1.2); /* Nhỏ lại và biến mất */
+        }
+    }
 
-input:focus, select:focus {
-    border-color: #d0021b;
-    box-shadow: 0 0 8px rgba(208, 2, 27, 0.5);
-    outline: none;
-}
+    .message-animate {
+        animation: fadeAndZoom 2.5s ease-in-out forwards; /* Hiệu ứng 2.5 giây */
+    }
 
-.btn-success {
-    font-weight: bold;
-    font-size: 20px;
-    border-radius: 10px;
-    background: linear-gradient(90deg, #ff4b2b, #ff416c);
-    border: none;
-    padding: 12px 25px;
-    transition: all 0.3s ease-in-out;
-    color: #fff;
-}
+    /* Form chính (giữ nguyên giao diện trước) */
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+        animation: slideIn 1s ease-in-out; /* Hiệu ứng lướt xuống */
+        display: none; /* Ẩn container ban đầu */
+    }
 
-.btn-success:hover {
-    background: linear-gradient(90deg, #ff416c, #ff4b2b);
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
+    h1 {
+        font-family: 'Pacifico', cursive;
+        font-size: 50px;
+        color: #e63946;
+        text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+        margin-bottom: 30px;
+    }
 
-    </style>
+    .form-label {
+        font-family: 'Poppins', sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: #1d3557;
+        margin-bottom: 8px;
+    }
+
+    input, select {
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px;
+        border: 2px solid #ff4500;
+        border-radius: 15px;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+    }
+
+    input:focus, select:focus {
+        border-color: #e63946;
+        box-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
+        outline: none;
+    }
+
+    .btn-success {
+        font-weight: bold;
+        font-size: 20px;
+        border-radius: 20px;
+        background: linear-gradient(90deg, #ff416c, #ff4b2b);
+        border: none;
+        padding: 15px 30px;
+        transition: all 0.3s ease-in-out;
+        color: #fff;
+        text-transform: uppercase;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(90deg, #ff4b2b, #ff416c);
+        transform: scale(1.1);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .footer-text {
+        margin-top: 20px;
+        font-size: 16px;
+        font-style: italic;
+        color: #6c757d;
+    }
+
+    /* Hiệu ứng mờ dần của form */
+    @keyframes fadeEffect {
+        0% {
+            opacity: 0;
+            visibility: visible;
+            transform: translateY(-20px);
+        }
+        100% {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    }
+
+    /* Hiệu ứng lướt xuống cho bảng */
+    @keyframes slideIn {
+        0% {
+            transform: translateY(-100px);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
 </head>
 <body>
-    <div class="container">
+    <div class="intro-messages" id="introMessages">
+        <p class="message">Chúc cậu năm mới vui vẻ, hạnh phúc tràn đầy.</p>
+        <p class="message">Gia đình đầm ấm, yêu thương trọn vẹn.</p>
+        <p class="message">Công việc thuận lợi, sự nghiệp vững vàng.</p>
+        <p class="message">Tài lộc gõ cửa, may mắn ngập nhà.</p>
+        <p class="message">An khang thịnh vượng, bình an cả năm.</p>
+    </div>
+
+    <div class="container" id="mainContent">
         <h1 class="mb-4">Chúc Mừng Năm Mới!</h1>
         <form id="infoForm">
             <div class="mb-3">
@@ -83,15 +180,7 @@ input:focus, select:focus {
                 <input type="text" class="form-control" id="name" name="name" required>
             </div>
             <div class="mb-3">
-                <label for="account" class="form-label">💰  Số tài khoản</label>
-                <input type="text" class="form-control" id="account" name="account" required>
-            </div>
-            <div class="mb-3">
-                <label for="bank" class="form-label">🏦 Loại Ngân hàng</label>
-                <input type="text" class="form-control" id="bank" name="bank" required>
-            </div>
-            <div class="mb-3">
-                <label for="wish" class="form-label">📝 Đôi Lời muốn gửi tới Thành Danh ❤️ </label>
+                <label for="wish" class="form-label">📝 Những điều tốt đẹp muốn gửi tới Thành Danh ❤️</label>
                 <input type="text" class="form-control" id="wish" name="wish" required>
             </div>
             <button type="submit" class="btn btn-success">🧧 Xác Nhận 🧧</button>
@@ -102,44 +191,75 @@ input:focus, select:focus {
         <source src="./nhactet.mp3" type="audio/mpeg">
     </audio>
 
-    
-    
-        <script>
-            document.getElementById('infoForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    // Lấy thông tin từ form
-    const name = document.getElementById('name').value;
-    const account = document.getElementById('account').value;
-    const bank = document.getElementById('bank').value;
-    const wish = document.getElementById('wish').value;
-    const time = new Date().toLocaleString(); // Lấy thời gian hiện tại
+    <script>
+      const messages = document.querySelectorAll('.intro-messages .message');
+        const mainContent = document.getElementById('mainContent');
+        let currentMessageIndex = 0;
 
-    // Lưu thông tin vào localStorage để sử dụng trên trang quay số
-    localStorage.setItem('name', name);
-    localStorage.setItem('account', account);
-    localStorage.setItem('bank', bank);
-    localStorage.setItem('wish', wish);
-    localStorage.setItem('time', time);
+        function showNextMessage() {
+    if (currentMessageIndex < messages.length) {
+        const currentMessage = messages[currentMessageIndex];
 
-    // Gửi dữ liệu lên Google Sheets
-    const scriptURL = "https://script.google.com/macros/s/AKfycbypC3XLsWoR9sEM7bzqYgDTpEmqMbU6QuGOow_MU8Yu8uKDc6kD_NrSRphNg_PQFBlm/exec";
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('account', account);
-    formData.append('bank', bank);
-    formData.append('wish', wish);
-    formData.append('time', time);
+        // Hiển thị lời chúc hiện tại với hiệu ứng
+        currentMessage.style.visibility = 'visible';
+        currentMessage.style.opacity = '1';
+        currentMessage.classList.add('message-animate');
 
-    fetch(scriptURL, { method: 'POST', body: formData })
-        .then(response => response.text())
-       
-                window.location.href = "quayso.html"; // Chuyển hướng sang trang quay số
-         
-        
-            });
-           // Chờ sự kiện click để gửi tín hiệu phát nhạc đến iframe
-    document.addEventListener('click', function() {
+        // Sau 2.5 giây, ẩn lời chúc hiện tại và chuyển sang câu tiếp theo
+        setTimeout(() => {
+            currentMessage.style.opacity = '0';
+            currentMessage.style.visibility = 'hidden';
+            currentMessage.classList.remove('message-animate');
+
+            currentMessageIndex++; // Tăng chỉ số lời chúc
+            showNextMessage(); // Hiển thị lời chúc tiếp theo
+        }, 3000); // Tổng thời gian mỗi câu chúc là 3 giây
+    } else {
+        // Hiển thị nội dung chính sau khi hoàn thành tất cả các câu chúc
+        setTimeout(() => {
+            document.getElementById('introMessages').style.display = 'none';
+            mainContent.style.display = 'block';
+        }, 500);
+    }
+}
+        window.onload = function() {
+            showNextMessage();
+        }
+
+        document.getElementById('infoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Lấy thông tin từ form
+            const name = document.getElementById('name').value;
+            const wish = document.getElementById('wish').value;
+            const time = new Date().toLocaleString(); // Lấy thời gian hiện tại
+
+            // Lưu thông tin vào localStorage để sử dụng trên trang quay số
+            localStorage.setItem('name', name);
+            localStorage.setItem('wish', wish);
+            localStorage.setItem('time', time);
+
+            // Gửi dữ liệu lên Google Sheets
+            const scriptURL = "https://script.google.com/macros/s/AKfycbypC3XLsWoR9sEM7bzqYgDTpEmqMbU6QuGOow_MU8Yu8uKDc6kD_NrSRphNg_PQFBlm/exec";
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('wish', wish);
+            formData.append('time', time);
+
+            fetch(scriptURL, { method: 'POST', body: formData })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "quayso.html"; // Chuyển hướng khi thành công
+                    } else {
+                        throw new Error('Gửi dữ liệu thất bại');
+                    }
+                })
+                .catch(error => {
+                    alert("Đã xảy ra lỗi, vui lòng thử lại!");
+                    console.error('Lỗi:', error);
+                });
+        });
+        document.addEventListener('click', function() {
         let musicFrame = document.getElementById('music-frame');
         if (musicFrame && musicFrame.contentWindow) {
             musicFrame.contentWindow.postMessage('play', '*');
@@ -195,6 +315,6 @@ input:focus, select:focus {
         localStorage.setItem('isPlaying', 'true');
     });
 
-     </script>
+    </script>
 </body>
 </html>
