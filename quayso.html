@@ -157,73 +157,101 @@ h1 {
         <h1 class="mb-4">Chúc Mừng Năm Mới!</h1>
         <p class="mb-4" style="color: black;">Nhấn vào nút dưới đây để nhận lấy con số may mắn của bạn!</p>
         <button id="spinBtn" class="btn btn-primary lucky-spin">🎁 Quay Số Ngay</button>
-        <div id="result" class="mt-4">
+        <div id="result" class="mt-4" style="display: none;">
             <p>🎉 Chúc mừng! Bạn sẽ nhận được: <span id="luckyNumber" class="fw-bold text-danger"></span> VNĐ tiền lì xì từ DanhLo 🎉</p>
-            <button class="btn btn-success" onclick="submitLuckyNumber()">💰 Nhận Lì Xì</button>
+            <button id="receiveMoneyBtn" class="btn btn-success">💰 Nhận Lì Xì</button>
         </div>
     </div>
     <div id="recentWinners"></div>
     <audio id="bg-music" loop>
         <source src="./nhactet.mp3" type="audio/mpeg">
     </audio>
+    
+    <div id="infoModal" class="modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 350px; background-color: rgba(255, 255, 255, 0.95); border-radius: 16px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); padding: 24px; z-index: 1000; text-align: center; font-family: Arial, sans-serif;">
+        <h2 class="mb-3" style="font-size: 1.5rem; font-weight: bold; color: #D0021B;">Nhập Thông Tin Nhận Tiền</h2>
+        <div class="form-group" style="margin-bottom: 16px;">
+            <label for="accountNumber" style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Số tài khoản</label>
+            <input type="text" id="accountNumber" class="form-control" style="width: 90%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: Arial, sans-serif;" placeholder="Nhập số tài khoản">
+        </div>
+        <div class="form-group" style="margin-bottom: 16px;">
+            <label for="bankName" style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Tên ngân hàng</label>
+            <input type="text" id="bankName" class="form-control" style="width: 90%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: Arial, sans-serif;" placeholder="Nhập tên ngân hàng">
+        </div>
+        <div>
+            <button id="closeModalBtn" class="btn btn-secondary" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem;">Thoát</button>
+        </div>
+    </div>
+    <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 999;"></div>
+    
+    
+   
 
     <script>
-        document.getElementById('spinBtn').addEventListener('click', function() {
-            let spinBtn = document.getElementById('spinBtn');
-            if (spinBtn.disabled) return;
+       document.getElementById('spinBtn').addEventListener('click', function () {
+        let spinBtn = document.getElementById('spinBtn');
+        if (spinBtn.disabled) return;
 
-            spinBtn.disabled = true;
-            spinBtn.classList.remove('lucky-spin');
-            spinBtn.innerText = "🎉 Đã Quay!";
+        spinBtn.disabled = true;
+        spinBtn.classList.remove('lucky-spin');
+        spinBtn.innerText = "🎉 Đã Quay!";
 
-            let luckyNumber;
-            let random = Math.random();
+        let luckyNumber;
+        let random = Math.random();
 
-            if (random < 0.8) {
-                luckyNumber = Math.floor(Math.random() * 40) + 1;
-            } else if (random < 0.95) {
-                luckyNumber = Math.floor(Math.random() * 20) + 41;
-            } else {
-                luckyNumber = Math.floor(Math.random() * 40) + 61;
-            }
+        if (random < 0.8) {
+            luckyNumber = Math.floor(Math.random() * 40) + 1;
+        } else if (random < 0.95) {
+            luckyNumber = Math.floor(Math.random() * 20) + 41;
+        } else {
+            luckyNumber = Math.floor(Math.random() * 40) + 61;
+        }
 
-            document.getElementById('luckyNumber').innerText = luckyNumber * 1000;
-            document.getElementById('result').style.display = "block";
-        });
+        document.getElementById('luckyNumber').innerText = luckyNumber * 1000;
+        document.getElementById('result').style.display = "block";
+    });
 
-        function submitLuckyNumber() {
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxmuo6Q77ZRcxpeXiJR04ew-Kvj5YUhhjJWqPAvyEKfCruPMjLFX6LSGkcNZrnCaDOY/exec";
+    document.getElementById('receiveMoneyBtn').addEventListener('click', function () {
+        document.getElementById('infoModal').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    });
 
-    const name = localStorage.getItem('name'); // Lấy tên từ localStorage
-    const luckyNumber = document.getElementById('luckyNumber').innerText;
+    document.getElementById('closeModalBtn').addEventListener('click', function () {
+        const accountNumber = document.getElementById('accountNumber').value.trim();
+        const bankName = document.getElementById('bankName').value.trim();
+        const luckyNumber = document.getElementById('luckyNumber').innerText;
+        const name = localStorage.getItem('name'); // Tên người dùng từ localStorage
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxmuo6Q77ZRcxpeXiJR04ew-Kvj5YUhhjJWqPAvyEKfCruPMjLFX6LSGkcNZrnCaDOY/exec";
 
-    if (!name || !luckyNumber) {
-        alert("Không có dữ liệu hợp lệ. Vui lòng thử lại!");
-        return;
-    }
+        // Kiểm tra thông tin nhập
+        if (!accountNumber || !bankName || !name || !luckyNumber) {
+            alert('Vui lòng nhập đầy đủ thông tin tài khoản và ngân hàng!');
+            return;
+        }
 
-    const formData = new FormData();
-    formData.append('action', 'update');  // Hành động cập nhật
-    formData.append('name', name);  // Gửi tên để tìm đúng hàng
-    formData.append('amount', luckyNumber);  // Gửi số tiền lì xì
+        // Gửi dữ liệu lên Google Sheet
+        const formData = new FormData();
+        formData.append('action', 'update'); // Hành động cập nhật
+        formData.append('name', name);       // Tên người nhận
+        formData.append('bank', bankName);  // Tên ngân hàng
+        formData.append('account', accountNumber); // Số tài khoản
+        formData.append('amount', luckyNumber); // Số tiền lì xì
+        formData.append('time', new Date().toLocaleString()); // Thời gian gửi
 
-    fetch(scriptURL, { method: 'POST', body: formData })
-        .then(response => response.text())
-        .then(result => {
-            if (result.trim() === "SUCCESS") {
-                alert("Lì xì của bạn đã được cập nhật!");
-                localStorage.clear();
-                window.location.href = "index.html";  // Quay lại trang chủ sau khi hoàn tất
-            } else if (result.trim() === "NOT FOUND") {
-                alert("Không tìm thấy thông tin người nhận. Vui lòng kiểm tra lại!");
-            } else {
-                alert("Có lỗi xảy ra. Vui lòng thử lại!");
-            }
-        })
-        .catch(error => {
-            alert("Lỗi kết nối. Vui lòng kiểm tra lại mạng!");
-        });
-}
+        fetch(scriptURL, { method: 'POST', body: formData })
+            .then(response => response.text())
+            .then(result => {
+                if (result.trim() === "SUCCESS") {
+                    alert('Thông tin đã được ghi nhận. Chúc bạn một năm mới vui vẻ!');
+                    localStorage.clear();
+                    window.location.href = 'index.html';
+                } else {
+                    alert('Đã xảy ra lỗi khi gửi thông tin. Vui lòng thử lại!');
+                }
+            })
+            .catch(error => {
+                alert('Lỗi kết nối. Vui lòng thử lại!');
+            });
+    });
 
 function fetchWinners() {
         const sheetURL = "https://script.google.com/macros/s/AKfycbxmuo6Q77ZRcxpeXiJR04ew-Kvj5YUhhjJWqPAvyEKfCruPMjLFX6LSGkcNZrnCaDOY/exec";
@@ -272,27 +300,21 @@ function fetchWinners() {
     setInterval(fetchWinners, 60000);
     fetchWinners();
    // Chờ sự kiện click để gửi tín hiệu phát nhạc đến iframe
-   document.addEventListener('click', function() {
-        let musicFrame = document.getElementById('music-frame');
-        if (musicFrame && musicFrame.contentWindow) {
-            musicFrame.contentWindow.postMessage('play', '*');
-            console.log("Gửi tín hiệu phát nhạc");
-        }
-    });
 
-    // Thêm sự kiện dừng nhạc
-    document.addEventListener("DOMContentLoaded", function() {
+   document.addEventListener("DOMContentLoaded", function () {
     let audio = document.getElementById('bg-music');
 
-    // Khôi phục thời gian phát nếu có lưu trước đó
-    if (localStorage.getItem('audioTime')) {
-        audio.currentTime = parseFloat(localStorage.getItem('audioTime')) || 0;
+    // Khôi phục thời gian phát và trạng thái phát nếu có lưu trước đó
+    let savedTime = localStorage.getItem('audioTime');
+    let isPlaying = localStorage.getItem('isPlaying') === 'true';
+
+    if (savedTime) {
+        audio.currentTime = parseFloat(savedTime) || 0;
     }
 
-    // Kiểm tra xem nhạc đã từng phát hay chưa
-    if (localStorage.getItem('isPlaying') === 'true') {
+    if (isPlaying) {
         audio.play().then(() => {
-            console.log("Nhạc đã tự động phát lại từ vị trí trước đó.");
+            console.log("Nhạc tiếp tục phát từ vị trí đã lưu.");
         }).catch(() => {
             console.log("Autoplay bị chặn, chờ thao tác từ người dùng.");
 
@@ -306,7 +328,7 @@ function fetchWinners() {
     } else {
         // Nếu nhạc chưa từng phát, thử phát lần đầu
         audio.play().then(() => {
-            console.log("Nhạc đã tự động phát lần đầu.");
+            console.log("Nhạc phát lần đầu.");
             localStorage.setItem('isPlaying', 'true');
         }).catch(() => {
             console.log("Autoplay bị chặn, chờ thao tác từ người dùng.");
@@ -319,24 +341,24 @@ function fetchWinners() {
         });
     }
 
-    // Lưu lại thời gian phát mỗi giây để tiếp tục từ vị trí hiện tại
+    // Lưu lại thời gian phát mỗi giây
     setInterval(() => {
         if (!audio.paused) {
             localStorage.setItem('audioTime', audio.currentTime);
         }
     }, 1000);
+
+    // Lưu trạng thái khi người dùng rời khỏi trang
+    window.addEventListener('beforeunload', () => {
+        localStorage.setItem('isPlaying', !audio.paused);
+        localStorage.setItem('audioTime', audio.currentTime);
+    });
 });
 
-// Xóa trạng thái khi nhạc dừng để kiểm soát lại khi tải trang
-document.getElementById('bg-music').onpause = function() {
+// Xóa trạng thái khi nhạc bị dừng
+document.getElementById('bg-music').onpause = function () {
     localStorage.removeItem('isPlaying');
-    localStorage.removeItem('audioTime');
 };
-
-// Đảm bảo trạng thái nhạc vẫn tiếp tục khi người dùng rời khỏi trang và quay lại
-window.addEventListener('beforeunload', () => {
-    localStorage.setItem('isPlaying', 'true');
-});
 
 
 </script>
