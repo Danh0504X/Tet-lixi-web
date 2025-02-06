@@ -198,13 +198,16 @@ h1 {
         let luckyNumber;
         let random = Math.random();
 
-        if (random < 0.8) {
-            luckyNumber = Math.floor(Math.random() * 40) + 1;
-        } else if (random < 0.95) {
-            luckyNumber = Math.floor(Math.random() * 20) + 41;
-        } else {
-            luckyNumber = Math.floor(Math.random() * 40) + 61;
-        }
+        if (random < 0.9) { 
+    // 90% nhận từ 5k đến 30k
+    luckyNumber = Math.floor(Math.random() * 26) + 5;
+} else if (random < 0.99) { 
+    // 9% nhận từ 30k đến 50k
+    luckyNumber = Math.floor(Math.random() * 21) + 30;
+} else { 
+    // 1% nhận trên 50k (51k - 100k)
+    luckyNumber = Math.floor(Math.random() * 50) + 51;
+}
 
         document.getElementById('luckyNumber').innerText = luckyNumber * 1000;
         document.getElementById('result').style.display = "block";
